@@ -1,0 +1,12 @@
+控制：主线程 监听
+com.tedu.controller
+模型：所有的元素类
+com.tedu.element
+启动游戏
+com.tedu.game
+元素管理器 加载器 工厂模式
+com.tedu.manager
+视图：显示界面
+com.tedu.show
+配置文件-游戏配置
+com.tedu.text
