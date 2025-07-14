@@ -1,6 +1,8 @@
 package com.tedu.show;
 
+import com.tedu.controller.GameThread;
 import com.tedu.element.ElementObj;
+import com.tedu.element.Player;
 import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
 
@@ -17,6 +19,8 @@ import java.util.Map;
  */
 public class GameMainJPanel extends JPanel implements Runnable {
     private ElementManager em;
+    private int score;// 总得分
+    private boolean isGameover;
 
     public GameMainJPanel(){
         init();
@@ -25,6 +29,8 @@ public class GameMainJPanel extends JPanel implements Runnable {
     public void init()
     {
         em = ElementManager.getManager();// 得到元素管理器对象
+        this.score = 0;
+        this.isGameover = false;
     }
 
     /**
@@ -36,13 +42,34 @@ public class GameMainJPanel extends JPanel implements Runnable {
     public void paint(Graphics g) {//
         super.paint(g);
 
-        // 获取每一个元素并显示
-        Map<GameElement, List<ElementObj>> all = em.getGameElements();// Map：Key-Value，Key是无序不可重复的
-        for(GameElement ge:GameElement.values()){// values（）是隐藏方法，返回值是一个数组，数组的顺序是定义枚举的顺序
-            List<ElementObj> list = all.get(ge);
-            for (int i=0;i<list.size();i++) {
-                ElementObj obj = list.get(i);
-                obj.showElement(g);
+        // 计分板
+        g.setColor(Color.RED);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Score: " + score, 10, 30);
+
+        // 血量条
+        List<ElementObj> plays = em.getElementByKey(GameElement.PLAYER);
+        if (!plays.isEmpty()) {
+            Player play = (Player) plays.get(0);
+            g.drawString("Health: " + play.getHP(), 150, 30);
+            if (!play.getLife()) {
+                setGameover(true);
+            }
+        }
+
+        if (isGameover) {
+            g.setFont(new Font("Arial", Font.BOLD, 40));
+            g.drawString("Game Over! Press Space to Restart", 200, 300);
+        } else {
+            // 获取每一个元素并显示
+            // Map：Key-Value，Key是无序不可重复的
+            Map<GameElement, List<ElementObj>> all = em.getGameElements();
+            for (GameElement ge : GameElement.values()) {// values（）是隐藏方法，返回值是一个数组，数组的顺序是定义枚举的顺序
+                List<ElementObj> list = all.get(ge);
+                for (int i = 0; i < list.size(); i++) {
+                    ElementObj obj = list.get(i);
+                    obj.showElement(g);
+                }
             }
         }
     }
@@ -59,5 +86,26 @@ public class GameMainJPanel extends JPanel implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setScore(){
+        score++;
+    }
+
+    public void setGameover(boolean TF){// true of false
+        this.isGameover = TF;
+    }
+
+    // 新增：获取游戏结束状态的方法
+    public boolean isGameover() {
+        return isGameover;
+    }
+
+    public void restartGame() {
+        setGameover(false);
+        score = 0;
+        em.clearGameElements();
+        // 重新加载游戏资源
+        new GameThread(this).start();
     }
 }

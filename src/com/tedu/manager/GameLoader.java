@@ -26,11 +26,13 @@ public class GameLoader {
     // 存储类的反射
     private static Map<String, Class<?>> objMap = new HashMap<>();
 
+    public static int currentLevel = 0;
+
     /**
      * @说明 传入地图ID，由加载方法根据文件规则自动产生地图。
      * @param mapID
      */
-    public static void LoadMap(int mapID){
+    public static List<ElementObj> LoadMap(int mapID){
         String mapName = "com/tedu/text/" + mapID + ".map";
         ClassLoader classLoader = GameLoader.class.getClassLoader();
         InputStream maps = classLoader.getResourceAsStream(mapName);
@@ -39,6 +41,8 @@ public class GameLoader {
         try{
             pro.load(maps);
 
+            List<ElementObj> mapObjs = new ArrayList<>();// 用于返回
+
             Enumeration<?> names = pro.propertyNames();
             while(names.hasMoreElements()){
                 String key = names.nextElement().toString();
@@ -46,11 +50,17 @@ public class GameLoader {
                 for(int i=0;i<arrs.length;i++){
                     ElementObj element = new MapObj().createElement(key + "," + arrs[i]);// 例：GRASS,120,250
                     em.addElement(GameElement.MAPS, element);
+
+                    mapObjs.add(element);
                 }
             }
+
+            return mapObjs;
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        return null;
     }
 
     public static void LoadImg(){
@@ -91,12 +101,14 @@ public class GameLoader {
         }
 
 //        em.addElement(GameElement.PLAY, new Player().createElement(PlayerStr));
-        em.addElement(GameElement.PLAY, obj.createElement(PlayerStr));
+        em.addElement(GameElement.PLAYER, obj.createElement(PlayerStr));
     }
 
-    public static void LoadTenEnemy(){
-        for(int i=0;i<10;i++){
-            em.addElement(GameElement.ENEMY, new Enemy().createElement(""));
+    public static void LoadEnemy(List<ElementObj> elementObjs) {
+        String EnemyStr = "0,0,up";
+
+        for(int i=0;i<5;i++) {
+            em.addElement(GameElement.ENEMY, new Enemy(elementObjs).createElement(EnemyStr));
         }
     }
 

@@ -16,15 +16,15 @@ public class GameStart {
      */
     public static void main(String[] args) {
         // 实例化
-        GameJFrame gf = new GameJFrame();
-        GameMainJPanel gm = new GameMainJPanel();
-        GameListener listener = new GameListener();
-        GameThread mainth = new GameThread();
+        GameJFrame jf = new GameJFrame();
+        GameMainJPanel jp = new GameMainJPanel();
+        GameListener listener = new GameListener(jp);
+        GameThread mainth = new GameThread(jp);
         // 注入
-        gf.setjPanel(gm);
-        gf.setKeyListener(listener);
-        gf.setThread(mainth);
+        jf.setjPanel(jp);
+        jf.setKeyListener(listener);
+        jf.setThread(mainth);
         // 启动
-        gf.start();
+        jf.start();
     }
 }

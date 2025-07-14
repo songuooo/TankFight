@@ -21,13 +21,17 @@ public abstract class ElementObj {
     }
 
     public ElementObj(int x, int y, int w, int h, ImageIcon icon) {
-        super();
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.icon = icon;
         this.life = true;
+    }
+
+    // 封装创建对象方法
+    public ElementObj createElement(String str){
+        return null;
     }
 
     /**
@@ -64,11 +68,6 @@ public abstract class ElementObj {
     }
     protected void shoot(long gameTime){
 
-    }
-
-    // 封装创建对象方法
-    public ElementObj createElement(String str){
-        return null;
     }
 
     public void die(){
@@ -108,6 +107,28 @@ public abstract class ElementObj {
     public void setIcon(ImageIcon icon) {
         this.icon = icon;
     }
+
+    public int getHP() {
+        return HP;
+    }
+
+    public void setHP(int HP) {
+        this.HP = HP;
+    }
+
+    public void reduceHP(int damage) {
+        if(this.HP <= 0){
+            return;
+        }
+
+        this.HP -= damage;
+
+        if(this.HP <= 0){
+            this.HP = 0;
+            this.setLife(false);
+        }
+    }
+
     public boolean getLife(){
         return life;
     }

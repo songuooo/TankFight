@@ -3,6 +3,7 @@ package com.tedu.controller;
 import com.tedu.element.ElementObj;
 import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
+import com.tedu.show.GameMainJPanel;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -15,11 +16,16 @@ import java.util.Set;
  * @author songuooo
  */
 public class GameListener implements KeyListener {
+
     private ElementManager em = ElementManager.getManager();
+    private GameMainJPanel jp;
+
     private Set<Integer> set = new HashSet<Integer>();// 存储按键Code值，使按键作为位移开关
 
-    public GameListener() {
+    public GameListener(GameMainJPanel jp) {
         super();
+
+        this.jp = jp;
     }
 
     @Override
@@ -35,12 +41,18 @@ public class GameListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
         // 使一次按键只能触发一次位移，即让按键改变移动属性的状态，只作为移动的开关
         int key = e.getKeyCode();
+
+        if(jp.isGameover() && key == KeyEvent.VK_SPACE){
+            jp.restartGame();
+            return;
+        }
+
         if(set.contains(key)){
             return;
         }
         set.add(key);
 
-        List<ElementObj> play = em.getElementByKey(GameElement.PLAY);// 通过元素管理器获取玩家元素
+        List<ElementObj> play = em.getElementByKey(GameElement.PLAYER);// 通过元素管理器获取玩家元素
         for(ElementObj obj:play){
             obj.KeyClick(true, e.getKeyCode());
         }
@@ -55,7 +67,7 @@ public class GameListener implements KeyListener {
         }
         set.remove(key);
 
-        List<ElementObj> play = em.getElementByKey(GameElement.PLAY);
+        List<ElementObj> play = em.getElementByKey(GameElement.PLAYER);
         for(ElementObj obj:play){
             obj.KeyClick(false, e.getKeyCode());
         }

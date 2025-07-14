@@ -8,6 +8,7 @@ import com.tedu.show.GameJFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // 玩家元素类
@@ -24,7 +25,7 @@ public class Player extends ElementObj {
     private boolean down = false;
     private String fx = "up";// 方向属性，默认朝上
     private boolean atkType = false;// 攻击状态
-    private long pTime = 0;
+    private long oldTime = 0;
 
     public Player() {
 
@@ -41,6 +42,7 @@ public class Player extends ElementObj {
 
         this.setX(GameJFrame.GameX / 2 + this.getW() * 2);
         this.setY(GameJFrame.GameY - this.getH() * 2);// ???
+        this.setHP(3);
 
         return this;
     }
@@ -51,8 +53,10 @@ public class Player extends ElementObj {
      */
     @Override
     public void showElement(Graphics g) {
-        g.drawImage(this.getIcon().getImage(), this.getX(), this.getY(),
-                this.getW(), this.getH(), null);
+        g.drawImage(this.getIcon().getImage(),
+                this.getX(), this.getY(),
+                this.getW(), this.getH(),
+                null);
     }
 
     @Override
@@ -97,18 +101,41 @@ public class Player extends ElementObj {
 
     @Override
     protected void move(){// 根据移动状态和边界自动移动
+        int updateX = this.getX();
+        int updateY = this.getY();
+
         if(this.left && this.getX()>0){
-            this.setX(this.getX() - 1);
+            updateX = this.getX() - 1;
         }
         if(this.up && this.getY()>0){
-            this.setY(this.getY() - 1);
+            updateY = this.getY() - 1;
         }
         if(this.right && this.getX()<GameJFrame.GameX - this.getW() - 15){// 注意图片原点在左上角
-            this.setX(this.getX() + 1);
+            updateX = this.getX() + 1;
         }
         if(this.down && this.getY()<GameJFrame.GameY - this.getH() - 38){
-            this.setY(this.getY() + 1);
+            updateY = this.getY() + 1;
         }
+
+        // 检查新位置是否与障碍物碰撞
+        if (!isCollidingWithObstacles(updateX, updateY)) {
+            this.setX(updateX);
+            this.setY(updateY);
+        }
+    }
+
+    // 检查是否与障碍物碰撞
+    private boolean isCollidingWithObstacles(int newX, int newY) {
+        ElementManager em = ElementManager.getManager();
+        List<ElementObj> maps = em.getElementByKey(GameElement.MAPS);
+
+        for (ElementObj mapObj : maps) {
+            Rectangle newPlayRect = new Rectangle(newX, newY, this.getW(), this.getH());
+            if (newPlayRect.intersects(mapObj.getRectangle())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -118,10 +145,10 @@ public class Player extends ElementObj {
      */
     @Override
     public void shoot(long gameTime){
-        if(!this.atkType || gameTime - pTime < 40){// 子弹间隔控制
+        if(!this.atkType || gameTime - this.oldTime < 50){// 子弹间隔控制
             return;
         }
-        pTime = gameTime;
+        this.oldTime = gameTime;
 
         ElementObj bullet = new PlayerBullet().createElement(this.toString());// 使用子弹类的封装方法创建对象
         ElementManager.getManager().addElement(GameElement.PLAYBULLET, bullet);

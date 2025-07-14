@@ -1,6 +1,7 @@
 package com.tedu.show;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -30,7 +31,7 @@ public class GameJFrame extends JFrame {
 
     public void init(){
         this.setSize(GameX, GameY);
-        this.setTitle("测试游戏");
+        this.setTitle("坦克大战");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// 窗体关闭时程序退出
         this.setLocationRelativeTo(null);// 窗体居中显示
     }
@@ -42,6 +43,7 @@ public class GameJFrame extends JFrame {
      */
     public void setjPanel(JPanel jPanel) {
         this.jPanel = jPanel;
+        this.jPanel.setBackground(Color.BLACK);
     }
 
     public void setKeyListener(KeyListener keyListener) {
@@ -92,9 +94,11 @@ public class GameJFrame extends JFrame {
 
         // ???
         // 如果 jPanel 是 Runnable 的（子类）实体对象（即如果 jPanel 实现了 Runnable 接口），则执行 if 语句，并为 task 赋值 this.jPanel
-        if(this.jPanel instanceof Runnable task){
-            Thread thread = new Thread(task);// 线程启动会执行 this.jPanel 的 run 重写方法
+        if(this.jPanel instanceof Runnable){
+            Runnable run=(Runnable)this.jPanel;
+            Thread thread=new Thread(run);// 线程启动会执行 this.jPanel 的 run 重写方法
             thread.start();
+            System.out.println("启动");
         }
     }
 }

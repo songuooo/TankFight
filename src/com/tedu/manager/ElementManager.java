@@ -19,18 +19,28 @@ public class ElementManager {
      */
     private Map<GameElement, List<ElementObj>> gameElements;
 
+    private ElementManager(){
+        init();
+    }
+
+    /**
+     * ???
+     * 构造方法不能被继承，本方法为将来可能出现的功能扩展，重写init方法准备
+     */
+    public void init(){
+        gameElements = new HashMap<GameElement, List<ElementObj>>();
+        // 将每种元素集合都放入到map中
+        for(GameElement ge:GameElement.values()){
+            gameElements.put(ge, new ArrayList<ElementObj>());
+        }
+    }
+
     public Map<GameElement, List<ElementObj>> getGameElements(){
         return gameElements;
     }
 
     public List<ElementObj> getElementByKey(GameElement ge){
         return gameElements.get(ge);
-    }
-
-    public void addElement(GameElement ge, ElementObj obj){// 主要由加载器调用
-        List<ElementObj> list = gameElements.get(ge);
-        if(list == null) return;
-        list.add(obj);
     }
 
     /**
@@ -61,20 +71,15 @@ public class ElementManager {
 //        EM = new ELementManeger();
 //    }
 
-    private ElementManager(){
-        init();
+    public void addElement(GameElement ge, ElementObj obj){// 主要由加载器调用
+        List<ElementObj> list = gameElements.get(ge);
+        if(list == null) return;
+        list.add(obj);
     }
 
-    /**
-     * ???
-     * 构造方法不能被继承，本方法为将来可能出现的功能扩展，重写init方法准备
-     */
-    public void init(){
-        gameElements = new HashMap<GameElement, List<ElementObj>>();
-        // 将每种元素集合都放入到map中
-        for(GameElement ge:GameElement.values()){
-            gameElements.put(ge, new ArrayList<ElementObj>());
+    public void clearGameElements() {
+        for(GameElement ge:GameElement.values()) {
+            gameElements.get(ge).clear();
         }
     }
-
 }

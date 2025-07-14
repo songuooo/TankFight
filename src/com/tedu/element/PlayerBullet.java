@@ -9,13 +9,16 @@ import java.awt.*;
  * @author songuooo
  */
 public class PlayerBullet extends ElementObj {
-    private int atk;
+    private int attack;
     private int speed;
     private String fx;
-    private long pbTime = 0;
+    private long oldTime;
 
     public PlayerBullet(){
-
+        this.setHP(1);
+        this.attack = 1;
+        this.speed = 3;
+        this.oldTime = 0;
     }
 
     // 当一个类的创建步骤过多时，可以对创建这个对象的过程进行封装，外界只需要传输必要的参数，返回值就是对象实体
@@ -33,14 +36,13 @@ public class PlayerBullet extends ElementObj {
         }
         this.setW(10);
         this.setH(10);
-        this.atk = 1;
-        this.speed = 3;
+
         return this;
     }
 
     @Override
     public void showElement(Graphics g){
-        g.setColor(Color.BLACK);
+        g.setColor(Color.GRAY);
         g.fillOval(this.getX(), this.getY(), this.getW(), this.getH());
     }
 
