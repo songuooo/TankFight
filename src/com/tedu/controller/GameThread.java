@@ -78,7 +78,8 @@ public class GameThread extends Thread {
 
             ElementPK(playBullets, enemys, jp);
             ElementPK(playBullets, maps, jp);// 问题需解决：1.子弹与水碰撞无事发生；2.子弹与铁块碰撞子弹消失
-
+            ElementPK(enemyBullets, player, jp);
+            ElementPK(enemyBullets, maps, jp);
 
             gameTime++;// 唯一的时间控制
 
