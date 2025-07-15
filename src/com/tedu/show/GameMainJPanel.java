@@ -20,7 +20,7 @@ import java.util.Map;
 public class GameMainJPanel extends JPanel implements Runnable {
     private ElementManager em;
     private int score;// 总得分
-    private boolean isGameover;
+    private static boolean isGameover;
 
     public GameMainJPanel(){
         init();
@@ -51,7 +51,7 @@ public class GameMainJPanel extends JPanel implements Runnable {
         List<ElementObj> plays = em.getElementByKey(GameElement.PLAYER);
         if (!plays.isEmpty()) {
             Player play = (Player) plays.get(0);
-            g.drawString("Health: " + play.getHP(), 150, 30);
+            g.drawString("Life: " + play.getHP(), 150, 30);
             if (!play.getLife()) {
                 setGameover(true);
             }
@@ -59,7 +59,7 @@ public class GameMainJPanel extends JPanel implements Runnable {
 
         if (isGameover) {
             g.setFont(new Font("Arial", Font.BOLD, 40));
-            g.drawString("Game Over! Press Space to Restart", 200, 300);
+            g.drawString("Congratulation!", 200, 300);
         } else {
             // 获取每一个元素并显示
             // Map：Key-Value，Key是无序不可重复的
@@ -92,8 +92,8 @@ public class GameMainJPanel extends JPanel implements Runnable {
         score++;
     }
 
-    public void setGameover(boolean TF){// true of false
-        this.isGameover = TF;
+    public static void setGameover(boolean TF){// true of false
+        isGameover = TF;
     }
 
     // 新增：获取游戏结束状态的方法

@@ -41,13 +41,15 @@ public class Enemy extends ElementObj{
         do {
             overlap = false;
             x = ran.nextInt(GameJFrame.GameX - 35); // 在游戏区域内随机生成X坐标
-            y = ran.nextInt(GameJFrame.GameY - 35); // 在游戏区域内随机生成Y坐标
+            y = 0; // 在游戏区域内随机生成Y坐标
 
             // 检查生成的位置是否与任何现有的MapObj对象重叠
-            for (ElementObj obj : elementObjs) {
-                if (checkOverlap(x, y, obj.getX(), obj.getY(), obj.getW(), obj.getH())) {
-                    overlap = true;
-                    break; // 如果发现重叠，跳出循环
+            if(elementObjs != null) {
+                for (ElementObj obj : elementObjs) {
+                    if (checkOverlap(x, y, obj.getX(), obj.getY(), obj.getW(), obj.getH())) {
+                        overlap = true;
+                        break; // 如果发现重叠，跳出循环
+                    }
                 }
             }
         } while (overlap);
@@ -67,7 +69,7 @@ public class Enemy extends ElementObj{
         return this;
     }
 
-    // 辅助方法，用于检查两个矩形是否重叠
+    // 检查两个矩形是否重叠
     private boolean checkOverlap(int x1, int y1, int x2, int y2, int w2, int h2) {
         return x1 < x2 + w2 && x1 + 35 > x2 && y1 < y2 + h2 && y1 + 35 > y2;
     }
@@ -130,20 +132,22 @@ public class Enemy extends ElementObj{
         }
 
         // 检测碰撞
-        for (ElementObj obj : elementObjs) {
-            if (this.pk(obj)) {
-                // 碰撞发生，随机生成新的速度值
-                Random random = new Random();
-                speedX = random.nextInt(2) - 1; // 随机生成横向速度，范围为-1到1
-                if(speedX == 0) {
-                    speedX = 1;
-                }
-                speedY = random.nextInt(2) - 1; // 随机生成纵向速度，范围为-1到1
-                if(speedY == 0) {
-                    speedY = 1;
-                }
+        if(elementObjs != null){
+            for (ElementObj obj : elementObjs) {
+                if (this.pk(obj)) {
+                    // 碰撞发生，随机生成新的速度值
+                    Random random = new Random();
+                    speedX = random.nextInt(2) - 1; // 随机生成横向速度，范围为-1到1
+                    if(speedX == 0) {
+                        speedX = 1;
+                    }
+                    speedY = random.nextInt(2) - 1; // 随机生成纵向速度，范围为-1到1
+                    if(speedY == 0) {
+                        speedY = 1;
+                    }
 
-                break;
+                    break;
+                }
             }
         }
     }

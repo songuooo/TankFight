@@ -26,13 +26,15 @@ public class GameLoader {
     // 存储类的反射
     private static Map<String, Class<?>> objMap = new HashMap<>();
 
-    public static int currentLevel = 0;
-
     /**
      * @说明 传入地图ID，由加载方法根据文件规则自动产生地图。
      * @param mapID
      */
     public static List<ElementObj> LoadMap(int mapID){
+        if(mapID == 11){
+            return null;
+        }
+
         String mapName = "com/tedu/text/" + mapID + ".map";
         ClassLoader classLoader = GameLoader.class.getClassLoader();
         InputStream maps = classLoader.getResourceAsStream(mapName);

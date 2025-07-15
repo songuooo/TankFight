@@ -51,6 +51,10 @@ public class GameThread extends Thread {
     }
 
     private void gameLoad(int currentLevel){
+        if(currentLevel == 11){
+            GameMainJPanel.setGameover(true);
+        }
+
         GameLoader.LoadImg(); //加载图片
         List<ElementObj> elementObjs = GameLoader.LoadMap(currentLevel);//可以变为 变量，每一关重新加载  加载地图
 //		加载主角
@@ -69,7 +73,7 @@ public class GameThread extends Thread {
         while(true){
             Map<GameElement, List<ElementObj>> all = em.getGameElements();// Map：Key-Value，Key是无序不可重复的
             List<ElementObj> enemys = em.getElementByKey(GameElement.ENEMY);
-
+            List<ElementObj> enemyBullets = em.getElementByKey(GameElement.ENEMYBULLET);
             List<ElementObj> player = em.getElementByKey(GameElement.PLAYER);
             List<ElementObj> playBullets = em.getElementByKey(GameElement.PLAYBULLET);
             List<ElementObj> maps = em.getElementByKey(GameElement.MAPS);
