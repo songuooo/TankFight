@@ -1,5 +1,6 @@
 package com.tedu.controller;
 
+import com.tedu.element.Base;
 import com.tedu.element.ElementObj;
 import com.tedu.element.Enemy;
 import com.tedu.element.Player;
@@ -40,8 +41,6 @@ public class GameThread extends Thread {
             // 游戏场景结束
             gameOver();
 
-            System.out.println(em.getElementByKey(GameElement.ENEMY).isEmpty());
-
             try{
                 Thread.sleep(50);
             } catch(Exception e){
@@ -57,11 +56,10 @@ public class GameThread extends Thread {
 
         GameLoader.LoadImg(); //加载图片
         List<ElementObj> elementObjs = GameLoader.LoadMap(currentLevel);//可以变为 变量，每一关重新加载  加载地图
-//		加载主角
+        GameLoader.LoadBase();
         GameLoader.LoadPlayer();//也可以带参数，单机还是2人
-//		加载敌人
         GameLoader.LoadEnemy(elementObjs);
-//		加载敌人NPC等
+
     }
 
     /**
@@ -77,13 +75,16 @@ public class GameThread extends Thread {
             List<ElementObj> player = em.getElementByKey(GameElement.PLAYER);
             List<ElementObj> playBullets = em.getElementByKey(GameElement.PLAYBULLET);
             List<ElementObj> maps = em.getElementByKey(GameElement.MAPS);
+            List<ElementObj> base = em.getElementByKey(GameElement.BASE);
 
             MoveAndUpdate(all, gameTime);
 
             ElementPK(playBullets, enemys, jp);
             ElementPK(playBullets, maps, jp);// 问题需解决：1.子弹与水碰撞无事发生；2.子弹与铁块碰撞子弹消失
+            ElementPK(playBullets, base, jp);
             ElementPK(enemyBullets, player, jp);
             ElementPK(enemyBullets, maps, jp);
+            ElementPK(enemyBullets, base, jp);
 
             gameTime++;// 唯一的时间控制
 
@@ -127,22 +128,31 @@ public class GameThread extends Thread {
                     // 扩展，给子弹设置伤害，给元素设置生命值，建立一个受攻击方法，生命值归零存货状态为false
                     ge1.reduceHP(1);
                     ge2.reduceHP(1);
-                    jp.setScore();
                 }
             }
         }
     }
 
     private void gameOver(){
-        if (!em.getElementByKey(GameElement.ENEMY).isEmpty()) { // 判断敌人列表是否为空
-            return;
+
+        if (em.getElementByKey(GameElement.ENEMY).isEmpty()) { // 判断敌人列表是否为空
+            // 重置游戏状态，例如清空敌人列表、重新加载主角等
+            em.clearGameElements(); // 清空所有元素
+            gameLoad(++currentLevel); // 加载下一关的元素
+            System.out.println("通过关卡"+currentLevel);
         }
 
-        // 重置游戏状态，例如清空敌人列表、重新加载主角等
-        em.clearGameElements(); // 清空所有元素
-        gameLoad(++currentLevel); // 加载下一关的元素
+        if(!em.getElementByKey(GameElement.BASE).isEmpty()){
+            em.clearGameElements(); // 清空所有元素
+            GameMainJPanel.setGameover(true);
+            System.out.println("BASE DIE");
+        }
 
-        System.out.println("通过关卡"+currentLevel);
+        if(em.getElementByKey(GameElement.PLAYER).isEmpty()){
+            em.clearGameElements(); // 清空所有元素
+            GameMainJPanel.setGameover(true);
+            System.out.println("PLAYER DIE");
+        }
     }
 }
 

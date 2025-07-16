@@ -1,6 +1,7 @@
 package com.tedu.show;
 
 import com.tedu.controller.GameThread;
+import com.tedu.element.Base;
 import com.tedu.element.ElementObj;
 import com.tedu.element.Player;
 import com.tedu.manager.ElementManager;
@@ -19,7 +20,7 @@ import java.util.Map;
  */
 public class GameMainJPanel extends JPanel implements Runnable {
     private ElementManager em;
-    private int score;// 总得分
+    private static int score;// 总得分
     private static boolean isGameover;
 
     public GameMainJPanel(){
@@ -42,24 +43,10 @@ public class GameMainJPanel extends JPanel implements Runnable {
     public void paint(Graphics g) {//
         super.paint(g);
 
-        // 计分板
-        g.setColor(Color.RED);
-        g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.drawString("Score: " + score, 10, 30);
-
-        // 血量条
-        List<ElementObj> plays = em.getElementByKey(GameElement.PLAYER);
-        if (!plays.isEmpty()) {
-            Player play = (Player) plays.get(0);
-            g.drawString("Life: " + play.getHP(), 150, 30);
-            if (!play.getLife()) {
-                setGameover(true);
-            }
-        }
-
         if (isGameover) {
+            g.setColor(Color.RED);
             g.setFont(new Font("Arial", Font.BOLD, 40));
-            g.drawString("Congratulation!", 200, 300);
+            g.drawString("End!", 400, 300);
         } else {
             // 获取每一个元素并显示
             // Map：Key-Value，Key是无序不可重复的
@@ -71,6 +58,40 @@ public class GameMainJPanel extends JPanel implements Runnable {
                     obj.showElement(g);
                 }
             }
+        }
+
+        // 计分板
+        g.setColor(Color.RED);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Score: " + score, 10, 30);
+
+        // 血量条
+        g.setColor(Color.RED);
+        List<ElementObj> plays = em.getElementByKey(GameElement.PLAYER);
+        if (!plays.isEmpty()) {
+            Player play = (Player) plays.get(0);
+            g.drawString("Life: " + play.getHP(), 150, 30);
+            if(play.getHP() <= 0) {
+                setGameover(true);
+                System.out.println("PLAYER DIE");
+            }
+        }
+        if (plays.isEmpty()) {
+            setGameover(true);
+            System.out.println("PLAYER DIE");
+        }
+
+        List<ElementObj> Base = em.getElementByKey(GameElement.BASE);
+        if(!Base.isEmpty()) {
+            Base base = (Base) Base.get(0);
+            if(base.getHP() <= 0) {
+                setGameover(true);
+                System.out.println("BASE DIE");
+            }
+        }
+        if(Base.isEmpty()) {
+            setGameover(true);
+            System.out.println("BASE DIE");
         }
     }
 
@@ -88,8 +109,14 @@ public class GameMainJPanel extends JPanel implements Runnable {
         }
     }
 
-    public void setScore(){
-        score++;
+    public static void setScore(String str, int num){
+        if(str == "+"){
+            score += num;
+        }
+
+        if(str == "-"){
+            score -= num;
+        }
     }
 
     public static void setGameover(boolean TF){// true of false

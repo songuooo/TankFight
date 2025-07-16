@@ -51,13 +51,4 @@ public class MapObj extends ElementObj {
         this.setIcon(icon);
         return this;
     }
-
-    public void setLive(boolean TF) {
-        this.setHP(this.getHP() - 1);
-        if(this.getHP() >0) {
-            return;
-        }
-
-        super.setLife(TF);
-    }
 }

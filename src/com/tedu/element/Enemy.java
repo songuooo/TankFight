@@ -4,6 +4,7 @@ import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
 import com.tedu.manager.GameLoader;
 import com.tedu.show.GameJFrame;
+import com.tedu.show.GameMainJPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -194,5 +195,20 @@ public class Enemy extends ElementObj{
             case "down" -> this.getY() + this.getH() - 5;
             default -> -1;
         };
+    }
+
+    @Override
+    public void reduceHP(int damage) {
+        if(this.getHP() <= 0){
+            return;
+        }
+
+        this.setHP(this.getHP() - damage);
+
+        if(this.getHP() <= 0){
+            this.setHP(0);
+            this.setLife(false);
+            GameMainJPanel.setScore("+", 10);
+        }
     }
 }

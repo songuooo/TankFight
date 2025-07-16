@@ -1,9 +1,6 @@
 package com.tedu.manager;
 
-import com.tedu.element.ElementObj;
-import com.tedu.element.Enemy;
-import com.tedu.element.MapObj;
-import com.tedu.element.Player;
+import com.tedu.element.*;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -64,6 +61,11 @@ public class GameLoader {
 
         return null;
     }
+
+    public static void LoadBase(){
+        em.addElement(GameElement.BASE, new Base().createElement(""));
+    }
+
 
     public static void LoadImg(){
         String textUrl = "com/tedu/text/GameData.pro";
