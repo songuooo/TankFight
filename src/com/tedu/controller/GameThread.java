@@ -140,15 +140,11 @@ public class GameThread extends Thread {
             em.clearGameElements(); // 清空所有元素
             gameLoad(++currentLevel); // 加载下一关的元素
             System.out.println("通过关卡"+currentLevel);
-        }
-
-        if(!em.getElementByKey(GameElement.BASE).isEmpty()){
+        } else if(!em.getElementByKey(GameElement.BASE).isEmpty()){
             em.clearGameElements(); // 清空所有元素
             GameMainJPanel.setGameover(true);
             System.out.println("BASE DIE");
-        }
-
-        if(em.getElementByKey(GameElement.PLAYER).isEmpty()){
+        } else if(em.getElementByKey(GameElement.PLAYER).isEmpty()){
             em.clearGameElements(); // 清空所有元素
             GameMainJPanel.setGameover(true);
             System.out.println("PLAYER DIE");

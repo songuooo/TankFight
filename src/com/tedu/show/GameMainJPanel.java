@@ -76,10 +76,10 @@ public class GameMainJPanel extends JPanel implements Runnable {
                 System.out.println("PLAYER DIE");
             }
         }
-        if (plays.isEmpty()) {
-            setGameover(true);
-            System.out.println("PLAYER DIE");
-        }
+//        if (plays.isEmpty()) {
+//            setGameover(true);
+//            System.out.println("PLAYER DIE");
+//        }
 
         List<ElementObj> Base = em.getElementByKey(GameElement.BASE);
         if(!Base.isEmpty()) {
@@ -89,10 +89,10 @@ public class GameMainJPanel extends JPanel implements Runnable {
                 System.out.println("BASE DIE");
             }
         }
-        if(Base.isEmpty()) {
-            setGameover(true);
-            System.out.println("BASE DIE");
-        }
+//        if(Base.isEmpty()) {
+//            setGameover(true);
+//            System.out.println("BASE DIE");
+//        }
     }
 
     @Override
